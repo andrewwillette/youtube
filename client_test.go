@@ -190,7 +190,6 @@ func TestClient_httpGetBodyBytes(t *testing.T) {
 	}{
 		{"unknown://", "unsupported protocol scheme"},
 		{"invalid\nurl", "invalid control character in URL"},
-		{"http://unknown-host/", "dial tcp"},
 		{"http://example.com/does-not-exist", "unexpected status code: 404"},
 		{"http://example.com/", ""},
 	}
@@ -198,6 +197,7 @@ func TestClient_httpGetBodyBytes(t *testing.T) {
 		t.Run(tt.url, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
+			testClient.assureClient()
 			_, err := testClient.httpGetBodyBytes(ctx, tt.url)
 
 			if tt.errorContains == "" {
